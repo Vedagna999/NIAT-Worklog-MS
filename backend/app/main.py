@@ -39,10 +39,14 @@ app.include_router(manager.router)
 app.include_router(admin.router)
 app.include_router(skills.router)
 
+from app.mongodb import check_mongo_health
+
 @app.get("/api/health")
 def health_check():
+    mongo_info = check_mongo_health()
     return {
         "status": "healthy",
         "service": "NIAT Worklog Management System API",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "mongodb": mongo_info
     }

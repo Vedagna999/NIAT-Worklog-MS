@@ -1,8 +1,11 @@
 import os
 from datetime import date
 
+_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_DEFAULT_DB_PATH = os.path.join(_BASE_DIR, "niat_worklog.db").replace("\\", "/")
+
 class Settings:
-    _raw_db = os.getenv("DATABASE_URL", "sqlite:///./niat_worklog.db")
+    _raw_db = os.getenv("DATABASE_URL", f"sqlite:///{_DEFAULT_DB_PATH}")
     if _raw_db.startswith("postgres://"):
         DATABASE_URL: str = _raw_db.replace("postgres://", "postgresql+psycopg://", 1)
     elif _raw_db.startswith("postgresql://") and not _raw_db.startswith("postgresql+psycopg://"):
