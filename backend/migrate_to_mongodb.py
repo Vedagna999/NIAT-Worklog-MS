@@ -19,10 +19,7 @@ from app.models import (
     SkillGrowthLog
 )
 
-MONGO_URI = os.getenv(
-    "MONGODB_URI",
-    "mongodb+srv://vedmonsterup_db_user:ciFEB5uQg7m3AZbT@cluster0.dpqokep.mongodb.net/niat_worklog?retryWrites=true&w=majority&appName=Cluster0"
-)
+MONGO_URI = os.getenv("MONGODB_URI")
 
 def format_val(val):
     if isinstance(val, uuid.UUID):
@@ -32,7 +29,13 @@ def format_val(val):
     return val
 
 def migrate():
-    print(f"Connecting to MongoDB Atlas...")
+    if not MONGO_URI:
+        print("ERROR: MONGODB_URI environment variable is not set.")
+        print("Please set MONGODB_URI before running migration, e.g.:")
+        print("  export MONGODB_URI='mongodb+srv://<username>:<password>@cluster0.dpqokep.mongodb.net/niat_worklog'")
+        return
+
+    print("Connecting to MongoDB Atlas...")
     client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=10000)
     db = client.get_default_database("niat_worklog")
     
